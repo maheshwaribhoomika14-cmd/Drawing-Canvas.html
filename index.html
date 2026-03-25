@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drawing Canvas</title>
+
+    <link rel="stylesheet" href="index.css">
+
+    <style>
+        body {
+            text-align: center;
+            background: #f5f5f5;
+            font-family: Arial;
+        }
+
+        canvas {
+            border: 2px solid black;
+            background: white;
+            cursor: crosshair;
+        }
+
+        .toolbar {
+            margin: 15px;
+        }
+
+        button {
+            padding: 8px 15px;
+            margin: 5px;
+            border: none;
+            background: #333;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🎨 Drawing Canvas</h1>
+
+    <div class="toolbar">
+        <button onclick="clearCanvas()">Clear</button>
+        <button onclick="setBrush()">Brush</button>
+        <button onclick="setEraser()">Eraser</button>
+        Color: <input type="color" id="colorPicker">
+    </div>
+
+    <canvas id="canvas" width="800" height="500"></canvas>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        let drawing = false;
+        let eraser = false;
+
+        canvas.addEventListener("mousedown", (e) => {
+            drawing = true;
+            ctx.beginPath();
+            ctx.moveTo(e.offsetX, e.offsetY);
+        });
+
+        canvas.addEventListener("mouseup", () => {
+            drawing = false;
+        });
+
+        canvas.addEventListener("mousemove", (e) => {
+            if (!drawing) return;
+
+            ctx.lineWidth = 8;
+            ctx.lineCap = "round";
+
+            if (eraser) {
+                ctx.strokeStyle = "white"; // erase
+            } else {
+                ctx.strokeStyle = document.getElementById("colorPicker").value;
+            }
+
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+        });
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function setEraser() {
+            eraser = true;
+        }
+
+        function setBrush() {
+            eraser = false;
+        }
+    </script>
+
+</body>
+</html>
